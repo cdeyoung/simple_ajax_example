@@ -1,0 +1,80 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Listing People</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>First Name</th>
+      <th>Last Name</th>
+      <th>Age</th>
+      <th>Controls</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @people.each do |person| %>
+      <tr>
+        <td><%= person.first_name %>
+        <td><%= person.last_name %>
+        <td><%= person.age %>
+        <td colspan="3"><%= link_to 'Show', person %> <%= link_to 'Edit', edit_person_path(person) %> <%= link_to 'Destroy', person, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Person', new_person_path %>
+
+<div id="people-ajax">
+
+</div>
+
+<button id='ajax-button' type="button">Get Data</button>
+<button id='post-ajax-button' type="button">Post Data</button>
+
+<script type="text/javascript">
+  $(function() {
+    $('#ajax-button').on('click', function() {
+      $.ajax({
+        url: 'http://localhost:3000/people.json',
+        dataType: 'json',
+        type: 'GET',
+        success: function(data) {
+          $('#people-ajax').html('');
+          data.forEach(function(person, index, object) {
+            $('#people-ajax').append("<h1>" + person.first_name + ' ' + person.last_name + "</h1>" +
+              "<p>" + person.first_name + ' ' + person.last_name + ' is ' + person.age + ' years old.</p>');
+          });
+        },
+        error: function() {
+          alert('Could not access Ajax data.');
+        }
+      });
+    });
+
+    $('#post-ajax-button').on('click', function() {
+      $.ajax({
+        url: 'http://localhost:3000/people.json',
+        dataType: 'json',
+        type: 'POST',
+        data: {
+          "person": {
+            "first_name": "Miku",
+            "last_name": "De Young",
+            "age": 16
+          }
+        },
+        success: function(person) {
+          $('#people-ajax').append("<h1>" + person.first_name + ' ' + person.last_name + "</h1>" +
+            "<p>" + person.first_name + ' ' + person.last_name + ' is ' + person.age + ' years old.</p>');
+        },
+        error: function() {
+          alert('Could not post Ajax data.');
+        }
+      });
+    });
+  });
+</script>

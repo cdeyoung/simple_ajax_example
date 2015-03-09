@@ -1,0 +1,18 @@
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  pool: 5
+
+development:
+  <<: *default
+  database: simple_ajax_example_development
+
+test:
+  <<: *default
+  database: simple_ajax_example_test
+
+production:
+  <<: *default
+  database: simple_ajax_example_production
+  username: sae
+  password: <%= ENV['SIMPLE_AJAX_EXAMPLE_DATABASE_PASSWORD'] %>
